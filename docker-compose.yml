@@ -8,6 +8,25 @@ services:
       - mongo_data:/data/db
     restart: unless-stopped
 
+  mysql:
+    image: mysql:8.4
+    container_name: ampis_mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ampis_auth
+      MYSQL_USER: ampis
+      MYSQL_PASSWORD: ampis_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "ampis", "-pampis_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
   app:
     build: .
     container_name: ampis_app
@@ -17,9 +36,21 @@ services:
       - PYTHONUNBUFFERED=1
       - MONGO_URI=mongodb://mongo:27017
       - MONGO_DB=missing_persons_db
+      - AUTH_DATABASE_URL=mysql+pymysql://ampis:ampis_password@mysql:3306/ampis_auth?charset=utf8mb4
+      - AUTH_SECRET_KEY=change-me-in-production
+      - AUTH_SEED_ADMIN_EMAIL=admin@example.com
+      - AUTH_SEED_ADMIN_PASSWORD=admin
+      - AUTH_SEED_ADMIN_NAME=System Admin
+      - AUTH_SEED_USER_EMAIL=user@example.com
+      - AUTH_SEED_USER_PASSWORD=user
+      - AUTH_SEED_USER_NAME=Demo User
     depends_on:
-      - mongo
+      mongo:
+        condition: service_started
+      mysql:
+        condition: service_healthy
     restart: unless-stopped
 
 volumes:
   mongo_data:
+  mysql_data:

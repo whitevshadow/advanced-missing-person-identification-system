@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Literal
 
 from pydantic import BaseModel, EmailStr, Field
 
@@ -53,3 +53,32 @@ class MatchDecision(BaseModel):
     confidence: float
     decision: str
     reasons: List[str] = Field(default_factory=list)
+
+
+class UserCreate(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=8)
+    full_name: Optional[str] = None
+
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class UserRead(BaseModel):
+    id: int
+    email: EmailStr
+    full_name: Optional[str] = None
+    role: Literal["user", "admin"]
+    is_active: bool
+    created_at: datetime
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+
+
+class UserRoleUpdate(BaseModel):
+    role: Literal["user", "admin"]

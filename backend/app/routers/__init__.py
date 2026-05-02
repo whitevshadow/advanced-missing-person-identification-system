@@ -1,1 +1,1 @@
-from . import feedback, missing_persons, sightings
+from . import auth, feedback, missing_persons, sightings

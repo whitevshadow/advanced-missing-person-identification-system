@@ -186,6 +186,7 @@ To become production-ready:
 ## Stack
 
 - **Backend**: FastAPI + MongoDB
+- **RBAC/Auth**: MySQL + SQLAlchemy + JWT
 - **Face pipeline**: OpenCV YuNet (detection) + OpenCV SFace (embedding) pre-trained models
 - **Matching logic**: embedding similarity + city + physical feature overlap
 - **Frontend**: React (Vite)
@@ -211,6 +212,25 @@ To become production-ready:
    ```bash
    uvicorn backend.app.main:app --reload --host 127.0.0.1 --port 5000
    ```
+
+### RBAC / Auth Setup
+
+The project now includes a MySQL-backed users table for RBAC.
+
+- Configure `AUTH_DATABASE_URL` for your MySQL instance.
+- Configure `AUTH_SECRET_KEY` before using JWT login tokens.
+- On startup, the backend creates the auth tables automatically.
+
+Available auth endpoints:
+- `POST /api/auth/register` creates a `user` or `admin` account.
+- `POST /api/auth/login` returns a JWT access token.
+- `GET /api/auth/me` returns the current authenticated user.
+- `GET /api/auth/users` is admin-only.
+- `PATCH /api/auth/users/{user_id}/role` is admin-only.
+
+Demo credentials seeded on startup when the matching env vars are set:
+- Admin: `admin@example.com` / `replace-with-admin-password`
+- User: `user@example.com` / `replace-with-user-password`
 
 > On first face-processing request, pre-trained YuNet/SFace ONNX files are downloaded into `backend/models/` automatically.
 
@@ -242,6 +262,7 @@ To become production-ready:
 ## Docker / Development with Docker Compose
 
 - The repository includes a `docker-compose.yml` that runs the `app` and a `mongo` service.
+- The compose stack now also includes a MySQL service for RBAC/auth data.
 - The backend container expects MongoDB at `mongodb://mongo:27017` when run via Compose.
 - Container port mapping (example): host `1580` -> container `1580`.
 

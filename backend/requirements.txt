@@ -10,6 +10,10 @@ faiss-cpu>=1.8.0
 scikit-learn>=1.5.0
 numpy>=1.26.0
 python-dotenv>=1.0.1
+SQLAlchemy>=2.0.32
+PyJWT>=2.9.0
+pymysql>=1.1.1
+cryptography>=42.0.0
 
 # Testing dependencies
 pytest>=7.4.0

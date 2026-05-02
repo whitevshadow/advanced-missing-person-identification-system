@@ -5,8 +5,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+from .auth_db import seed_admin_user, seed_demo_user, wait_for_auth_db
 from .config import settings
-from .routers import feedback, missing_persons, sightings
+from .routers import auth, feedback, missing_persons, sightings
 
 app = FastAPI(title=settings.app_name)
 
@@ -32,6 +33,14 @@ def health_check() -> dict:
 app.include_router(missing_persons.router)
 app.include_router(sightings.router)
 app.include_router(feedback.router)
+app.include_router(auth.router)
+
+
+@app.on_event("startup")
+def startup_event() -> None:
+    wait_for_auth_db()
+    seed_admin_user()
+    seed_demo_user()
 
 
 # Serve built frontend (single-port deployment)

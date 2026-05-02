@@ -5,6 +5,28 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "/api",
 });
 
+const AUTH_TOKEN_KEY = "ampis_auth_token";
+
+export function getStoredAuthToken() {
+  return localStorage.getItem(AUTH_TOKEN_KEY);
+}
+
+export function setAuthToken(token) {
+  if (token) {
+    localStorage.setItem(AUTH_TOKEN_KEY, token);
+    api.defaults.headers.common.Authorization = `Bearer ${token}`;
+    return;
+  }
+
+  localStorage.removeItem(AUTH_TOKEN_KEY);
+  delete api.defaults.headers.common.Authorization;
+}
+
+const existingToken = getStoredAuthToken();
+if (existingToken) {
+  setAuthToken(existingToken);
+}
+
 export async function fetchMissingPersons() {
   const response = await api.get("/missing-persons");
   return response.data;
@@ -55,5 +77,20 @@ export async function reportSighting(payload) {
 
 export async function submitFeedback(payload) {
   const response = await api.post("/feedback", payload);
+  return response.data;
+}
+
+export async function registerUser(payload) {
+  const response = await api.post("/auth/register", payload);
+  return response.data;
+}
+
+export async function loginUser(payload) {
+  const response = await api.post("/auth/login", payload);
+  return response.data;
+}
+
+export async function fetchCurrentUser() {
+  const response = await api.get("/auth/me");
   return response.data;
 }
