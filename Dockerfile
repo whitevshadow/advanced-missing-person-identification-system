@@ -30,5 +30,5 @@ COPY --from=build-frontend /app/frontend/dist ./frontend/dist
 ENV PYTHONPATH=/app/backend
 WORKDIR /app/backend
 
-EXPOSE 1050
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "1050"]
+EXPOSE 1580
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "1580"]

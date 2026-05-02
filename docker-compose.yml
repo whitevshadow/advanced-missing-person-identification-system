@@ -12,7 +12,7 @@ services:
     build: .
     container_name: ampis_app
     ports:
-      - "1050:1050" # Host port 1050 -> container port 1050
+      - "1580:1580" # Host port 1580 -> container port 1580
     environment:
       - PYTHONUNBUFFERED=1
       - MONGO_URI=mongodb://mongo:27017
