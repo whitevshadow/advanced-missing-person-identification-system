@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     app_name: str = "Advanced Missing Person Identification System"
-    mongo_uri: str = "mongodb://127.0.0.1:27017"
+    mongo_uri: str = "mongodb://mongo:27017"
     mongo_db: str = "missing_persons_db"
     upload_dir: str = "backend/uploads"
     face_model_dir: str = "backend/models"
