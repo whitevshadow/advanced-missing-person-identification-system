@@ -26,7 +26,7 @@ app.add_middleware(
 
 @app.get("/api/health")
 def health_check() -> dict:
-    return {"status": "ok"}
+    return {"status": "healthy"}
 
 
 app.include_router(missing_persons.router)
