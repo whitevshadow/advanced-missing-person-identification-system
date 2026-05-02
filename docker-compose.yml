@@ -1,0 +1,25 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: ampis_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+
+  app:
+    build: .
+    container_name: ampis_app
+    ports:
+      - "1050:1050" # Host port 1050 -> container port 1050
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MONGO_URI=mongodb://mongo:27017
+      - MONGO_DB=missing_persons_db
+    depends_on:
+      - mongo
+    restart: unless-stopped
+
+volumes:
+  mongo_data:

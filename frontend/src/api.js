@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:5000/api",
+  // Use relative path so frontend and backend can be served from the same origin
+  baseURL: import.meta.env.VITE_API_BASE_URL || "/api",
 });
 
 export async function fetchMissingPersons() {
